@@ -1,5 +1,5 @@
 # gulp-cho-alioss
-https://gist.github.com/azarus/f369ee2ab0283ba0793b0ccf0e9ec590
+https://www.npmjs.com/package/ali-oss
 
 ## Usage
 
