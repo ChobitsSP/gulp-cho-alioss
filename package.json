@@ -1,0 +1,27 @@
+{
+  "name": "gulp-cho-alioss",
+  "version": "1.0.3",
+  "description": "Gulp Task to transform Typescript path imports into relative paths using the tsconfig",
+  "main": "index.js",
+  "devDependencies": {
+    "gulp": "^3.9.1"
+  },
+  "scripts": {
+    "test": "gulp"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ChobitsSP/gulp-cho-alioss.git"
+  },
+  "keywords": [
+    "gulpplugin"
+  ],
+  "author": "Chobits",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ChobitsSP/gulp-cho-alioss/issues"
+  },
+  "engines": {
+    "node": ">=0.10"
+  }
+}
