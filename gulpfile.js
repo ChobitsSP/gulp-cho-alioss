@@ -4,14 +4,14 @@ gulp.task('default', ['test']);
 
 gulp.task('test', () => {
   return gulp
-    .src('demo/**/*.js', { base: 'demo' })
+    .src('src/**/*.js', { base: 'src' })
     .pipe(
       alias({
         region: 'oss-cn-beijing',
         accessKeyId: 'accessKeyId',
         accessKeySecret: 'accessKeySecret',
         bucket: 'chobits',
-        prefix: 'test1',
+        prefix: 'gulp-cho-alioss',
       })
     )
     .pipe(gulp.dest('./dist'));
