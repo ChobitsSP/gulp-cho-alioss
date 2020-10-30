@@ -14,14 +14,13 @@ Then, add it to your `gulpfile.js`:
 var alias = require('gulp-cho-alioss');
 
 gulp.task('test', () => {
-  return gulp.src('demo/**/*.js', { base: 'demo' })
+  return gulp.src('dist/**/*', { base: 'dist' })
     .pipe(alias({
-      region: "oss-cn-beijing",
-      accessKeyId: "accessKeyId",
-      accessKeySecret: "accessKeySecret",
-      bucket: "chobits",
-      prefix: 'test1',
-    }))
-    .pipe(gulp.dest('./dist'));
+      region: 'oss-cn-beijing',
+      accessKeyId: 'accessKeyId',
+      accessKeySecret: 'accessKeySecret',
+      bucket: 'chobits',
+      prefix: 'gulp-cho-alioss',
+    }));
 });
 ```
