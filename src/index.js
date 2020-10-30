@@ -4,33 +4,34 @@ const OSS = require('ali-oss');
 // const path = require('path');
 
 /**
- * 
- * @param {MyFile} file 
- * @param {string} prefix 
+ *
+ * @param {MyFile} file
+ * @param {string} prefix
  */
 function getFileKey(file, prefix) {
   var str = file.path
-    .replace(file.cwd, "")
+    .replace(file.cwd, '')
     .replace(/\\/g, '/')
-    .replace(file.base, "")
+    .replace(file.base, '')
     .replace(/^\/+/, '');
 
-  return prefix
-    + ((!prefix || (prefix[prefix.length - 1]) === '/') ? '' : '/') + str;
+  return (
+    prefix + (!prefix || prefix[prefix.length - 1] === '/' ? '' : '/') + str
+  );
 }
 
 /**
  * 上传到阿里云oss
- * @param {OSS} client 
- * @param {string} ossPath 
- * @param {*} file 
- * @param {*} opts 
+ * @param {OSS} client
+ * @param {string} ossPath
+ * @param {*} file
+ * @param {*} opts
  */
 async function uploadFile(client, ossPath, file, opts) {
   try {
     await client.head(ossPath);
   } catch (err) {
-    if (err.message === "Object not exists") {
+    if (err.message === 'Object not exists') {
       return client.put(ossPath, file, opts);
     } else {
       throw err;
@@ -70,18 +71,17 @@ function main(option) {
           cb(null, file);
         })
         .catch(function (err) {
-          console.error("上传失败", err);
+          console.error('上传失败', err);
           cb(err, null);
         });
     } else if (file.isStream()) {
       // var code = fs.readFileSync(file.path, "utf8");
       // file.contents = Buffer.from(code, 'utf-8');
       cb(null, file);
-    }
-    else {
+    } else {
       cb(null, file);
     }
   });
-};
+}
 
 module.exports = main;
