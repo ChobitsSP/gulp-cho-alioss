@@ -1,11 +1,11 @@
 const through = require('through2');
-// const fs = require('fs');
+const fs = require('fs');
 const OSS = require('ali-oss');
 const path = require('path');
 
 /**
  * 
- * @param {*} file 
+ * @param {MyFile} file 
  * @param {string} prefix 
  */
 function getFileKey(file, prefix) {
@@ -16,7 +16,7 @@ function getFileKey(file, prefix) {
 
 /**
  *
- * @param {OSS.Options} option
+ * @param {OSS.Options & { prefix?: string }} option
  * @returns
  */
 function main(option) {
@@ -42,14 +42,27 @@ function main(option) {
     //   file.contents = Buffer.from(code, 'utf-8');
     // }
 
-    console.log(file);
-
     if (file.isBuffer()) {
-      client.put(getFileKey(file, option.prefix), file.contents, ossOpt).then(function () {
+
+      console.log(file.base);
+      console.log(file.path);
+      console.log(file.cwd);
+      
+      const path1 = getFileKey(file, option.prefix);
+      console.log(path1);
+      cb(null, file);
+      return;
+
+      client.put(getFileKey(file, option.prefix), file.contents, option.ossOpt).then(function () {
         cb(null, file);
       }).catch(function (err) {
+        console.error("上传失败", err);
         cb(err, null);
       });
+    } else if (file.isStream()) {
+      // var code = fs.readFileSync(file.path, "utf8");
+      // file.contents = Buffer.from(code, 'utf-8');
+      cb();
     }
     else {
       cb();
