@@ -1,7 +1,7 @@
 const through = require('through2');
-const fs = require('fs');
 const OSS = require('ali-oss');
-const path = require('path');
+// const fs = require('fs');
+// const path = require('path');
 
 /**
  * 
@@ -9,9 +9,33 @@ const path = require('path');
  * @param {string} prefix 
  */
 function getFileKey(file, prefix) {
+  var str = file.path
+    .replace(file.cwd, "")
+    .replace(/\\/g, '/')
+    .replace(file.base, "")
+    .replace(/^\/+/, '');
+
   return prefix
-    + ((!prefix || (prefix[prefix.length - 1]) === '/') ? '' : '/')
-    + path.posix.relative(file.base, file.path);
+    + ((!prefix || (prefix[prefix.length - 1]) === '/') ? '' : '/') + str;
+}
+
+/**
+ * 上传到阿里云oss
+ * @param {OSS} client 
+ * @param {string} ossPath 
+ * @param {*} file 
+ * @param {*} opts 
+ */
+async function uploadFile(client, ossPath, file, opts) {
+  try {
+    await client.head(ossPath);
+  } catch (err) {
+    if (err.message === "Object not exists") {
+      return client.put(ossPath, file, opts);
+    } else {
+      throw err;
+    }
+  }
 }
 
 /**
@@ -27,10 +51,6 @@ function main(option) {
     bucket: option.bucket,
   });
 
-  // client.getBucketInfo(options.bucket).then(rsp => {
-  //   console.log(rsp);
-  // });
-
   return through.obj(function (file, enc, cb) {
     // if (file.isBuffer()) {
     //   var code = file.contents.toString("utf-8");
@@ -43,32 +63,24 @@ function main(option) {
     // }
 
     if (file.isBuffer()) {
+      const ossPath = getFileKey(file, option.prefix);
 
-      console.log(file.base);
-      console.log(file.path);
-      console.log(file.cwd);
-      
-      const path1 = getFileKey(file, option.prefix);
-      console.log(path1);
-      cb(null, file);
-      return;
-
-      client.put(getFileKey(file, option.prefix), file.contents, option.ossOpt).then(function () {
-        cb(null, file);
-      }).catch(function (err) {
-        console.error("上传失败", err);
-        cb(err, null);
-      });
+      uploadFile(client, ossPath, file.contents, option.ossOpt)
+        .then(function () {
+          cb(null, file);
+        })
+        .catch(function (err) {
+          console.error("上传失败", err);
+          cb(err, null);
+        });
     } else if (file.isStream()) {
       // var code = fs.readFileSync(file.path, "utf8");
       // file.contents = Buffer.from(code, 'utf-8');
-      cb();
+      cb(null, file);
     }
     else {
-      cb();
+      cb(null, file);
     }
-
-    cb(null, file);
   });
 };
 

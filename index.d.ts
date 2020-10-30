@@ -14,4 +14,6 @@ interface MyFile {
    * C:\gulp-cho-oss
    */
   cwd: string;
+
+  contents: any;
 }
