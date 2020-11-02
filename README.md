@@ -21,6 +21,8 @@ gulp.task('test', () => {
       accessKeySecret: 'accessKeySecret',
       bucket: 'chobits',
       prefix: 'gulp-cho-alioss',
+      ignoreExist: false,
+      putOptions: {}
     }));
 });
 ```

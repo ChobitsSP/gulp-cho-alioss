@@ -25,7 +25,7 @@ function getFileKey(file, prefix) {
  * @param {OSS} client
  * @param {string} ossPath
  * @param {*} file
- * @param {*} opts
+ * @param {OSS.PutObjectOptions} opts
  */
 async function uploadFile(client, ossPath, file, opts) {
   try {
@@ -40,8 +40,19 @@ async function uploadFile(client, ossPath, file, opts) {
 }
 
 /**
+ * 上传到阿里云oss
+ * @param {OSS} client
+ * @param {string} ossPath
+ * @param {*} file
+ * @param {OSS.PutObjectOptions} opts
+ */
+function uploadFile2(client, ossPath, file, opts) {
+  return client.put(ossPath, file, opts);
+}
+
+/**
  *
- * @param {OSS.Options & { prefix?: string }} option
+ * @param {MyOptions} option
  * @returns
  */
 function main(option) {
@@ -65,8 +76,9 @@ function main(option) {
 
     if (file.isBuffer()) {
       const ossPath = getFileKey(file, option.prefix);
+      const uploadFunc = option.ignoreExist ? uploadFile : uploadFile2;
 
-      uploadFile(client, ossPath, file.contents, option.ossOpt)
+      uploadFunc(client, ossPath, file.contents, option.putOptions)
         .then(function () {
           cb(null, file);
         })

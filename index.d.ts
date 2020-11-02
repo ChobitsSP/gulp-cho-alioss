@@ -1,3 +1,4 @@
+import OSS from "ali-oss";
 
 interface MyFile {
   /**
@@ -16,4 +17,27 @@ interface MyFile {
   cwd: string;
 
   contents: any;
+}
+
+interface MyOptions extends OSS.Options {
+  prefix?: string;
+  ignoreExist?: boolean;
+  putOptions?: OSS.PutObjectOptions;
+}
+
+/**
+ *
+ * @param {string} addr
+ * @param {(string | string[])} range
+ * @returns {boolean}
+ */
+declare function check_many_cidrs(
+  addr: string,
+  range: string | string[]
+): boolean;
+
+declare namespace check_many_cidrs { }
+
+declare module "gulp-cho-alioss" {
+  export = check_many_cidrs;
 }
